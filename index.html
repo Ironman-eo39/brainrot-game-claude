@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><link rel="icon" href="data:,"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Brainrot models</title>
+<style>
+html,body{margin:0;height:100%;overflow:hidden;background:#06070a;font:14px system-ui,sans-serif}
+#stage{position:fixed;left:50%;top:50%;transform:translate(-50%,-50%);overflow:hidden;background:#1d2230}
+#stage canvas{position:absolute;left:0;top:0;width:100%;height:100%;display:block}
+#hud{position:absolute;top:calc(10px*var(--u,1));left:50%;transform:translateX(-50%);display:none;gap:calc(6px*var(--u,1));z-index:3;pointer-events:none}
+.hud-item{position:relative;width:calc(52px*var(--u,1));height:calc(52px*var(--u,1));border-radius:50%;background:rgba(255,255,255,.88);border:calc(3px*var(--u,1)) solid #fff;box-shadow:0 2px 8px rgba(0,0,0,.35);overflow:hidden}
+.hud-item img{width:100%;height:100%;object-fit:contain}
+.hud-item[data-state=pending]{opacity:.55}.hud-item[data-state=active]{outline:calc(3px*var(--u,1)) solid #ffd21a}
+.hud-mark{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font:900 calc(38px*var(--u,1)) system-ui}
+.hud-item[data-state=dead] .hud-mark{color:#e01616;text-shadow:0 0 4px #fff}.hud-item[data-state=ok] .hud-mark{color:#18c43a;text-shadow:0 0 4px #fff}
+#caption{position:absolute;bottom:calc(150px*var(--u,1));left:0;right:0;text-align:center;color:#fff;font:700 calc(20px*var(--u,1)) system-ui;text-shadow:0 2px 6px #000,0 0 3px #000;z-index:3;pointer-events:none}
+#emoji{position:absolute;top:calc(80px*var(--u,1));right:calc(12px*var(--u,1));font-size:calc(78px*var(--u,1));z-index:3;pointer-events:none}
+#pad{position:absolute;left:0;right:0;bottom:calc(14px*var(--u,1));display:none;justify-content:space-between;align-items:flex-end;padding:0 calc(14px*var(--u,1));z-index:6}
+#pad div{display:flex;flex-direction:column;gap:calc(10px*var(--u,1))}
+#pad button{width:calc(78px*var(--u,1));height:calc(78px*var(--u,1));border-radius:50%;border:0;background:rgba(255,255,255,.22);color:#fff;font:900 calc(30px*var(--u,1)) system-ui;touch-action:none;user-select:none}
+#pad button:active{background:rgba(255,255,255,.5)}
+#ui{position:fixed;top:8px;left:8px;z-index:5;color:#fff;background:rgba(0,0,0,.45);padding:4px 6px;border-radius:6px}
+#ui select,#ui button{font:inherit;padding:3px;max-width:240px;margin:2px 4px 2px 0}
+#pset{font:12px system-ui;margin-top:4px}
+#editor{position:absolute;inset:0;overflow:auto;background:rgba(8,10,16,.95);color:#eee;padding:calc(10px*var(--u,1));font:12px system-ui;display:none;z-index:8;box-sizing:border-box}
+#editor h4{margin:10px 0 4px;color:#ffd21a;font-size:13px}
+#editor .row{display:block;margin:4px 0}
+#editor input[type=range]{width:55%;vertical-align:middle}
+#editor .item{border:1px solid #334;border-radius:6px;padding:6px;margin:6px 0}
+#editor .grid{display:grid;grid-template-columns:repeat(2,1fr);gap:4px}
+#editor .grid input{width:70px}
+#editor button,#editor select,#editor input{font:inherit;margin:2px 2px 2px 0}
+#editor textarea{width:100%;height:110px;font:10px monospace;background:#111;color:#cfc;border:1px solid #334;box-sizing:border-box}
+#warn{color:#ffb070;min-height:16px;margin-top:4px}
+#pset input[type=range]{width:90px;vertical-align:middle}
+</style>
+<script type="importmap">{"imports":{"three":"./node_modules/three/build/three.module.js","three/addons/":"./node_modules/three/examples/jsm/","@dimforge/rapier3d-compat":"./node_modules/@dimforge/rapier3d-compat/rapier.es.js"}}</script>
+</head><body>
+<div id="stage"><div id="hud"></div><div id="caption"></div><div id="emoji"></div><div id="editor"></div>
+  <div id="pad"><button data-k="left">◀</button><div><button data-k="gas">▲</button><button data-k="brake">▼</button></div><button data-k="right">▶</button></div>
+</div>
+<div id="ui">
+  <select id="asset"></select> <select id="scene"></select> <select id="game"></select>
+  <select id="mode"><option value="scripted">scripted</option><option value="physics">physics</option></select>
+  <div id="pset">
+    <select id="pcar"><option value="jeep">Jeep</option><option value="school-bus">School bus</option><option value="supercar">Supercar</option><option value="moon-green">Moon ball</option></select><br>
+    speed <input id="pSpeed" type="range" min="6" max="35" step="1" value="18">
+    steer <input id="pSteer" type="range" min="0.3" max="2.5" step="0.1" value="1.1"><br>
+    gravity <input id="pGrav" type="range" min="0" max="20" step="0.5" value="9.8">
+    bounce <input id="pBounce" type="range" min="0" max="1" step="0.05" value="0.35">
+    <button id="reset">reset</button> <button id="editbtn">edit course</button>
+  </div>
+</div>
+<script type="module" src="./src/main.js"></script></body></html>
